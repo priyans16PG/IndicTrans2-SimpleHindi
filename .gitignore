@@ -10,3 +10,10 @@ venv/
 indictrans2-daily-hindi-lora/
 .DS_Store
 Thumbs.db
+
+# Large models, binaries, and build artifacts
+merged_model/
+onnx_model/
+pack/
+*.zip
+*.onnx
