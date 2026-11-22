@@ -1,6 +1,6 @@
 # IndicTrans2-SimpleHindi
 
-> **Version:** `0.1.1 (beta)`  
+> **Version:** `0.1.2 (beta)`  
 > **Status:** 🚧 *Beta — Active Development*
 
 **IndicTrans2-SimpleHindi** is a lightweight LoRA fine-tuned adapter for `ai4bharat/indictrans2-en-indic-dist-200M` designed specifically for **everyday, colloquial spoken Hindi**.
@@ -92,10 +92,10 @@ for src, tgt in zip(sentences, translations):
 
 The included dataset is located in the [`data/`](./data) directory:
 
-- **`daily_hindi_conversational.csv`**: Raw curated everyday conversational pairs.
-- **`train_data.csv`**: 5,100 training pairs (4,180 conversational + 920 general benchmark pairs).
-- **`val_data.csv`**: 400 held-out evaluation pairs (320 conversational + 80 general benchmark pairs).
-- **`daily_hindi_mixed.csv`**: Unified 5,500-pair reference dataset.
+- **`train_data.csv`**: **12,413** training pairs combining conversational dialogues, Tatoeba everyday sentences, and benchmark general pairs.
+- **`val_data.csv`**: **500** held-out evaluation pairs.
+- **`daily_hindi_mixed.csv`**: Full **12,913** deduplicated pairs.
+- **`daily_hindi_conversational.csv`**: Curated pure conversational source lines.
 
 To re-train or fine-tune with custom parameters:
 
@@ -103,13 +103,13 @@ To re-train or fine-tune with custom parameters:
 python train.py
 ```
 
-### Training Configuration
+### Training Configuration & Metrics
 - **Base Model:** `ai4bharat/indictrans2-en-indic-dist-200M`
 - **LoRA Parameters:** $r = 16, \alpha = 32, \text{dropout} = 0.05$
-- **Learning Rate:** $1\times 10^{-4}$ with 25 warmup steps
-- **Batch Size:** 16 (gradient accumulation 2, effective batch size 32)
-- **Epochs:** 3
-- **Validation Loss:** Decreased monotonically from `2.509` (Epoch 1) $\rightarrow$ `2.278` (Epoch 2) $\rightarrow$ **`2.207`** (Epoch 3).
+- **Total Dataset Size:** 12,913 pairs
+- **Validation Loss Progress:**
+  - Initial Phase (5.5k pairs): `2.509` $\rightarrow$ `2.278` $\rightarrow$ `2.207`
+  - Extended Phase with Tatoeba (12.9k pairs): **`1.944`** $\rightarrow$ **`1.927`** *(best checkpoint automatically retained)*
 
 ---
 
@@ -117,10 +117,10 @@ python train.py
 
 ```
 IndicTrans2-SimpleHindi/
-├── model/                     # Pre-trained LoRA adapter weights (v0.1.1 beta)
+├── model/                     # Pre-trained LoRA adapter weights (v0.1.2 beta)
 │   ├── adapter_config.json
 │   └── adapter_model.safetensors
-├── data/                      # Training and validation datasets
+├── data/                      # Training and validation datasets (~12.9k pairs)
 │   ├── train_data.csv
 │   ├── val_data.csv
 │   ├── daily_hindi_mixed.csv
@@ -137,7 +137,13 @@ IndicTrans2-SimpleHindi/
 
 ## Release Notes
 
+### v0.1.2 (beta)
+- Merged **Tatoeba Hindi-English dataset** (6,072 sentences), expanding total dataset to **12,913 pairs**.
+- Continued LoRA fine-tuning: validation loss decreased to a new best of **`1.927`** (down from `2.207`).
+- Updated adapter weights with expanded vocabulary and better colloquial sentence coverage.
+
 ### v0.1.1 (beta)
+- Initial public beta release with 5,500 conversational and general mix pairs.
 - Initial public beta release.
 - Pre-trained LoRA weights on 5,500 curated conversational and general mix pairs.
 - Interactive `chat.py` CLI and `inference.py` helper.
