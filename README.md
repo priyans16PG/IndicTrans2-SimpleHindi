@@ -36,7 +36,7 @@ Standard machine translation models often produce overly formal, archaic, or boo
 Clone this repository and install dependencies:
 
 ```bash
-git clone https://github.com/your-username/IndicTrans2-SimpleHindi.git
+git clone https://github.com/priyans16PG/IndicTrans2-SimpleHindi.git
 cd IndicTrans2-SimpleHindi
 pip install -r requirements.txt
 ```
