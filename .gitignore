@@ -17,3 +17,10 @@ onnx_model/
 pack/
 *.zip
 *.onnx
+
+# ONNX pipeline & packaging files
+export_onnx.py
+merge_lora.py
+package_pack.py
+quantize_onnx.py
+test_onnx.py
