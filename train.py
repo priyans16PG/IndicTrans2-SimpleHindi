@@ -29,8 +29,8 @@ ip = IndicProcessor(inference=False)
 # 2. Configure LoRA (targets attention projections)
 lora_config = LoraConfig(
     task_type=TaskType.SEQ_2_SEQ_LM,
-    r=16,
-    lora_alpha=32,
+    r=8,
+    lora_alpha=16,
     lora_dropout=0.05,
     target_modules=["q_proj", "k_proj", "v_proj", "out_proj"],
 )
@@ -45,7 +45,7 @@ dataset = load_dataset("csv", data_files={"train": train_path, "test": val_path}
 
 def preprocess_function(examples):
     inputs = ip.preprocess_batch(examples["en"], src_lang=SRC_LANG, tgt_lang=TGT_LANG)
-    targets = ip.preprocess_batch(examples["hi"], src_lang=TGT_LANG, tgt_lang=SRC_LANG)
+    targets = ip.preprocess_batch(examples["hi"], src_lang=TGT_LANG, is_target=True)
 
     model_inputs = tokenizer(inputs, max_length=128, truncation=True, padding=False)
     labels = tokenizer(text_target=targets, max_length=128, truncation=True, padding=False)
@@ -56,14 +56,15 @@ tokenized_ds = dataset.map(preprocess_function, batched=True, remove_columns=["e
 
 # 4. Training Arguments
 training_args = Seq2SeqTrainingArguments(
-    output_dir="./model_checkpoints",
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=16,
-    gradient_accumulation_steps=2,
+    output_dir=str(BASE_DIR / "model_checkpoints"),
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
+    gradient_accumulation_steps=8,
     learning_rate=1e-4,
-    warmup_steps=25,
+    lr_scheduler_type="cosine",
+    warmup_ratio=0.05,
     weight_decay=0.01,
-    num_train_epochs=3,
+    num_train_epochs=2,
     fp16=torch.cuda.is_available(),
     eval_strategy="epoch",
     save_strategy="epoch",
@@ -80,7 +81,7 @@ trainer_kwargs = {
     "args": training_args,
     "train_dataset": tokenized_ds["train"],
     "eval_dataset": tokenized_ds["test"],
-    "data_collator": DataCollatorForSeq2Seq(tokenizer, model=model),
+    "data_collator": DataCollatorForSeq2Seq(tokenizer, model=model, label_pad_token_id=-100),
 }
 if "processing_class" in inspect.signature(Seq2SeqTrainer.__init__).parameters:
     trainer_kwargs["processing_class"] = tokenizer
@@ -91,5 +92,6 @@ trainer = Seq2SeqTrainer(**trainer_kwargs)
 
 if __name__ == "__main__":
     trainer.train()
-    model.save_pretrained("./model")
-    print("Fine-tuning completed. Adapter saved to ./model")
+    save_path = str(BASE_DIR / "model")
+    model.save_pretrained(save_path)
+    print(f"Fine-tuning completed. Adapter saved to {save_path}")

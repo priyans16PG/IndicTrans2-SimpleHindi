@@ -7,6 +7,7 @@ __pycache__/
 env/
 venv/
 *.checkpoint.*
+model_checkpoints/
 indictrans2-daily-hindi-lora/
 .DS_Store
 Thumbs.db

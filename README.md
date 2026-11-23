@@ -109,12 +109,11 @@ python train.py
 
 ### Training Configuration & Metrics
 - **Base Model:** `ai4bharat/indictrans2-en-indic-dist-200M`
-- **LoRA Parameters:** $r = 16, \alpha = 32, \text{dropout} = 0.05$
-- **Total Dataset Size:** 13,561 pairs
-- **Validation Loss Progress:**
-  - Initial Phase (5.5k pairs): `2.509` $\rightarrow$ `2.278` $\rightarrow$ `2.207`
-  - Extended Phase with Tatoeba (12.9k pairs): `1.944` $\rightarrow$ **`1.927`**
-  - Continuation Phase with Dialogue Chunking (13.5k pairs): **`1.973`** *(robust colloquial idiom & dialogue coverage)*
+- **LoRA Parameters:** $r = 8, \alpha = 16, \text{dropout} = 0.05$ (1.77M trainable parameters, ~0.83% of total)
+- **Total Clean Dataset Size:** 12,640 pairs (12,140 train / 500 val)
+- **Target Preprocessing:** `is_target=True` (pure normalized Hindi token stream without leaking language codes)
+- **Inference Anti-Repetition:** `no_repeat_ngram_size=3`, `repetition_penalty=1.2`
+- **Validation Loss:** `2.491` (2 epochs cosine schedule with fresh base weights to eliminate catastrophic scrambling)
 
 ---
 
@@ -122,10 +121,10 @@ python train.py
 
 ```
 IndicTrans2-SimpleHindi/
-├── model/                     # Pre-trained LoRA adapter weights (v0.1.3 beta)
+├── model/                     # Fresh LoRA adapter weights (v0.1.3 beta)
 │   ├── adapter_config.json
 │   └── adapter_model.safetensors
-├── data/                      # Training and validation datasets (~13.5k pairs)
+├── data/                      # Cleaned training and validation datasets (~12.6k pairs)
 │   ├── train_data.csv
 │   ├── val_data.csv
 │   ├── daily_hindi_mixed.csv
@@ -133,6 +132,7 @@ IndicTrans2-SimpleHindi/
 ├── chat.py                    # Interactive terminal translation shell
 ├── inference.py               # Batch inference script
 ├── train.py                   # LoRA fine-tuning training script
+├── debug_compare.py           # Side-by-side diagnostic script (Base vs. LoRA)
 ├── requirements.txt           # Python dependencies
 ├── .gitignore
 └── README.md
@@ -143,10 +143,11 @@ IndicTrans2-SimpleHindi/
 ## Release Notes
 
 ### v0.1.3 (beta)
-- Integrated pre-processed and chunked dialogue pairs from newly added dataset, expanding total dataset to **13,561 pairs** (13,061 train / 500 val).
-- Dialogue chunks cleaned of stage directions, annotations, and speaker labels with length constrained $\le 128$ tokens.
-- Enhanced regex post-processing in `inference.py` and `chat.py` to automatically strip quotation/dialogue formatting artifacts.
-- Continued LoRA fine-tuning for 2 epochs, maintaining stable eval loss while expanding colloquial coverage and everyday tone.
+- **Fresh Retrain from Base Model:** Eliminated logic and cause-and-effect inversion by training a fresh $r=8$ adapter from base model weights.
+- **Dataset Audit & Pruning:** Removed misaligned dialogue pairs, stage directions, and extreme length-ratio anomalies across training splits.
+- **Fixed Target Token Leaks:** Explicitly enabled `is_target=True` in `IndicProcessor` to prevent target labels from inheriting encoder language tags (`_Deva`).
+- **Anti-Repetition Generation:** Added `no_repeat_ngram_size=3` and `repetition_penalty=1.2` in `inference.py` and `chat.py` to eliminate phrase repetition loops.
+- **Dynamic CWD Paths:** Model and data paths now resolve dynamically relative to `__file__`, enabling execution from any directory.
 
 ### v0.1.2 (beta)
 - Merged **Tatoeba Hindi-English dataset** (6,072 sentences), expanding total dataset to **12,913 pairs**.

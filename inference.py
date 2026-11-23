@@ -22,6 +22,7 @@ model.eval()
 ip = IndicProcessor(inference=True)
 
 def clean_output(text: str) -> str:
+    text = re.sub(r'^(?:_[A-Za-z]+|[a-z]{3}_[A-Za-z]+)\s*', '', text)
     text = re.sub(r'^[\s"\'“”]+', '', text)
     text = re.sub(r'[\s"\'“”]+$', '', text)
     text = re.sub(r'["“”]{2,}', '', text)
@@ -37,6 +38,8 @@ def translate_batch(sentences: list[str]) -> list[str]:
             max_length=128,
             num_beams=4,
             use_cache=False,
+            no_repeat_ngram_size=3,
+            repetition_penalty=1.2,
         )
 
     decoded = tokenizer.batch_decode(generated, skip_special_tokens=True)
