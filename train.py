@@ -38,8 +38,9 @@ model = get_peft_model(model, lora_config)
 model.print_trainable_parameters()
 
 # 3. Load Dataset
-train_path = str(Path("data/train_data.csv").resolve())
-val_path = str(Path("data/val_data.csv").resolve())
+BASE_DIR = Path(__file__).resolve().parent
+train_path = str(BASE_DIR / "data" / "train_data.csv")
+val_path = str(BASE_DIR / "data" / "val_data.csv")
 dataset = load_dataset("csv", data_files={"train": train_path, "test": val_path})
 
 def preprocess_function(examples):
