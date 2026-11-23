@@ -30,6 +30,10 @@ base_model = AutoModelForSeq2SeqLM.from_pretrained(
 model = PeftModel.from_pretrained(base_model, ADAPTER_PATH).to(DEVICE)
 model.eval()
 
+# Precompute non-Devanagari / Arabic script token IDs to suppress
+arabic_re = re.compile(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]')
+SUPPRESS_TOKENS = [tid for tid, token in tokenizer.tgt_decoder.items() if arabic_re.search(token)]
+
 ip = IndicProcessor(inference=True)
 
 def clean_output(text: str) -> str:
@@ -54,6 +58,7 @@ def translate(text: str) -> str:
             use_cache=False,
             no_repeat_ngram_size=3,
             repetition_penalty=1.2,
+            suppress_tokens=SUPPRESS_TOKENS,
         )
 
     decoded = tokenizer.batch_decode(generated, skip_special_tokens=True)

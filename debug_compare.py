@@ -15,18 +15,17 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
 base_model = AutoModelForSeq2SeqLM.from_pretrained(
     MODEL_NAME,
     trust_remote_code=True,
-    dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
 ).to(DEVICE)
 base_model.eval()
 
 ip = IndicProcessor(inference=True)
 
 test_sentences = [
-    "I am stuck in traffic right now, so I will be ten minutes late for the meeting.",
-    "Don't waste your time worrying about things you cannot control.",
-    "My phone battery died, so I couldn't check your message on WhatsApp.",
     "Small habits may not seem important today, but over a year they make a huge difference.",
-    "He closed his laptop, picked up his keys, and walked out of the office without saying a word.",
+    "If you don't start working on the project today, you won't finish before the deadline.",
+    "When you remove distractions from your desk, it becomes much easier to focus on deep work.",
+    "After searching the entire house for an hour, he realized his glasses were on his head the whole time.",
 ]
 
 def clean_output(text: str) -> str:
@@ -35,6 +34,9 @@ def clean_output(text: str) -> str:
     text = re.sub(r'[\s"\'“”]+$', '', text)
     text = re.sub(r'["“”]{2,}', '', text)
     return text.strip()
+
+arabic_re = re.compile(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]')
+SUPPRESS_TOKENS = [tid for tid, token in tokenizer.tgt_decoder.items() if arabic_re.search(token)]
 
 def run_inference(model, sentences):
     batch = ip.preprocess_batch(sentences, src_lang="eng_Latn", tgt_lang="hin_Deva")
@@ -47,6 +49,7 @@ def run_inference(model, sentences):
             use_cache=False,
             no_repeat_ngram_size=3,
             repetition_penalty=1.2,
+            suppress_tokens=SUPPRESS_TOKENS,
         )
     decoded = tokenizer.batch_decode(generated, skip_special_tokens=True)
     raw = ip.postprocess_batch(decoded, lang="hin_Deva")
