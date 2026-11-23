@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -15,7 +16,7 @@ ADAPTER_PATH = "./model"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 print("=" * 60)
-print(" IndicTrans2-SimpleHindi v0.1.1 (beta)")
+print(" IndicTrans2-SimpleHindi v0.1.3 (beta)")
 print(f" Running on: {DEVICE.upper()}")
 print("=" * 60)
 
@@ -29,6 +30,12 @@ model = PeftModel.from_pretrained(base_model, ADAPTER_PATH).to(DEVICE)
 model.eval()
 
 ip = IndicProcessor(inference=True)
+
+def clean_output(text: str) -> str:
+    text = re.sub(r'^[\s"\'“”]+', '', text)
+    text = re.sub(r'[\s"\'“”]+$', '', text)
+    text = re.sub(r'["“”]{2,}', '', text)
+    return text.strip()
 
 def translate(text: str) -> str:
     text = text.strip()
@@ -47,7 +54,7 @@ def translate(text: str) -> str:
 
     decoded = tokenizer.batch_decode(generated, skip_special_tokens=True)
     translations = ip.postprocess_batch(decoded, lang="hin_Deva")
-    return translations[0]
+    return clean_output(translations[0])
 
 def main():
     print("\nModel ready! Enter English text to translate to everyday conversational Hindi.")

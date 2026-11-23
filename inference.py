@@ -1,4 +1,5 @@
 import os
+import re
 import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from peft import PeftModel
@@ -19,6 +20,12 @@ model.eval()
 
 ip = IndicProcessor(inference=True)
 
+def clean_output(text: str) -> str:
+    text = re.sub(r'^[\s"\'“”]+', '', text)
+    text = re.sub(r'[\s"\'“”]+$', '', text)
+    text = re.sub(r'["“”]{2,}', '', text)
+    return text.strip()
+
 def translate_batch(sentences: list[str]) -> list[str]:
     batch = ip.preprocess_batch(sentences, src_lang="eng_Latn", tgt_lang="hin_Deva")
     inputs = tokenizer(batch, truncation=True, padding="longest", return_tensors="pt").to(DEVICE)
@@ -33,7 +40,7 @@ def translate_batch(sentences: list[str]) -> list[str]:
 
     decoded = tokenizer.batch_decode(generated, skip_special_tokens=True)
     translations = ip.postprocess_batch(decoded, lang="hin_Deva")
-    return translations
+    return [clean_output(t) for t in translations]
 
 if __name__ == "__main__":
     sample_queries = [
