@@ -1,18 +1,23 @@
 import re
+import sys
 import pandas as pd
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
-# Read from backup or original data files
-train_path = BASE_DIR / "data" / "train_data.csv"
-val_path = BASE_DIR / "data" / "val_data.csv"
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+# Read from data directory
+train_path = REPO_ROOT / "data" / "train_data.csv"
+val_path = REPO_ROOT / "data" / "val_data.csv"
 
 # Re-read raw combined dataset if available or current
-if (BASE_DIR.parent / "daily_hindi_combined_v3.csv").exists():
-    raw_df = pd.read_csv(BASE_DIR.parent / "daily_hindi_combined_v3.csv")
+if (REPO_ROOT.parent / "daily_hindi_combined_v3.csv").exists():
+    raw_df = pd.read_csv(REPO_ROOT.parent / "daily_hindi_combined_v3.csv")
     print(f"Re-loading from daily_hindi_combined_v3.csv: {len(raw_df)} rows")
 else:
-    raw_df = pd.read_csv(BASE_DIR / "data" / "daily_hindi_mixed.csv")
+    raw_df = pd.read_csv(REPO_ROOT / "data" / "daily_hindi_mixed.csv")
 
 # Regex for true stage directions
 stage_re_en = re.compile(
@@ -88,10 +93,10 @@ print(f"Val rows: {len(val_df)}")
 # Save to IndicTrans2-SimpleHindi/data/
 train_df.to_csv(train_path, index=False)
 val_df.to_csv(val_path, index=False)
-clean_df[["en", "hi"]].to_csv(BASE_DIR / "data" / "daily_hindi_mixed.csv", index=False)
+clean_df[["en", "hi"]].to_csv(REPO_ROOT / "data" / "daily_hindi_mixed.csv", index=False)
 
-# Sync to root directory
-root_dir = BASE_DIR.parent
+# Sync to parent workspace directory
+root_dir = REPO_ROOT.parent
 train_df.to_csv(root_dir / "train_data.csv", index=False)
 val_df.to_csv(root_dir / "val_data.csv", index=False)
 print("Saved cleanly to data directories.")

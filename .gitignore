@@ -21,14 +21,14 @@ model_v012_backup/
 *.onnx
 
 # Diagnostics and scratch
-audit_scripts_and_data.py
-diagnose_base_inference.py
-isolation_test.py
+scripts/audit_scripts_and_data.py
+scripts/diagnose_base_inference.py
+scripts/isolation_test.py
 
 # ONNX pipeline & packaging files
-export_onnx.py
-merge_lora.py
-package_pack.py
-quantize_onnx.py
-test_onnx.py
+scripts/export_onnx.py
+scripts/merge_lora.py
+scripts/package_pack.py
+scripts/quantize_onnx.py
+scripts/test_onnx.py
 

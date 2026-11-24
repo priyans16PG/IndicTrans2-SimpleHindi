@@ -1,15 +1,20 @@
 import os
+import sys
 import re
 import torch
 from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from peft import PeftModel
 from IndicTransToolkit.processor import IndicProcessor
 
-BASE_DIR = Path(__file__).resolve().parent
-ROOT_DIR = BASE_DIR.parent
 MODEL_NAME = "ai4bharat/indictrans2-en-indic-dist-200M"
-ADAPTER_PATH = str(BASE_DIR / "model")
+ADAPTER_PATH = str(REPO_ROOT / "model")
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 print(f"Device: {DEVICE.upper()}")
@@ -29,9 +34,11 @@ SUPPRESS_TOKENS = [tid for tid, token in tokenizer.tgt_decoder.items() if arabic
 
 ip = IndicProcessor(inference=True)
 
-test_set_file = ROOT_DIR / "simple_hindi_test_set.txt"
+test_set_file = SCRIPT_DIR / "simple_hindi_test_set.txt"
 if not test_set_file.exists():
-    test_set_file = BASE_DIR / "simple_hindi_test_set.txt"
+    test_set_file = REPO_ROOT / "simple_hindi_test_set.txt"
+if not test_set_file.exists():
+    test_set_file = REPO_ROOT.parent / "simple_hindi_test_set.txt"
 
 with open(test_set_file, "r", encoding="utf-8") as f:
     sentences = [line.strip() for line in f if line.strip()]

@@ -1,13 +1,20 @@
 import os
+import sys
 import re
 import torch
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from peft import PeftModel
 from IndicTransToolkit.processor import IndicProcessor
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_NAME = "ai4bharat/indictrans2-en-indic-dist-200M"
-ADAPTER_PATH = os.path.join(BASE_DIR, "model")
+ADAPTER_PATH = str(REPO_ROOT / "model")
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 print(f"Device: {DEVICE.upper()}")

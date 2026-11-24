@@ -1,8 +1,14 @@
 import re
+import sys
 import pandas as pd
 from pathlib import Path
 
-DATA_PATH = Path(__file__).resolve().parent / "data" / "train_data.csv"
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+DATA_PATH = REPO_ROOT / "data" / "train_data.csv"
 print(f"Auditing: {DATA_PATH}")
 
 df = pd.read_csv(DATA_PATH)

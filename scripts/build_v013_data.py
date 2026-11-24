@@ -1,18 +1,21 @@
 import re
+import sys
 import pandas as pd
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
-ROOT_DIR = BASE_DIR.parent
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 print("=" * 80)
 print("BUILDING v0.1.3 DATASET: CLEAN BOOK PAIRS + 25% CONVERSATIONAL DATA")
 print("=" * 80)
 
 # 1. Clean book data from dataset3_cleaned.csv
-book_file = ROOT_DIR / "dataset3_cleaned.csv"
+book_file = REPO_ROOT.parent / "dataset3_cleaned.csv"
 if not book_file.exists():
-    book_file = BASE_DIR / "dataset3_cleaned.csv"
+    book_file = REPO_ROOT / "dataset3_cleaned.csv"
 
 df_book = pd.read_csv(book_file)
 stage_re_en = re.compile(
@@ -47,7 +50,9 @@ df_book_clean = pd.DataFrame(clean_book).drop_duplicates(subset=["en"])
 print(f"1. Clean Book Dialogue Pairs: {len(df_book_clean)}")
 
 # 2. Conversational sample (25% of daily_hindi_conversational.csv)
-conv_file = BASE_DIR / "data" / "daily_hindi_conversational.csv"
+conv_file = REPO_ROOT / "data" / "daily_hindi_conversational.csv"
+if not conv_file.exists():
+    conv_file = SCRIPT_DIR / "data" / "daily_hindi_conversational.csv"
 df_conv = pd.read_csv(conv_file)
 df_conv_sample = df_conv.sample(n=1500, random_state=42)
 print(f"2. Conversational Sample: {len(df_conv_sample)}")
@@ -84,9 +89,9 @@ val_size = 200
 val_df = combined.iloc[:val_size][["en", "hi"]]
 train_df = combined.iloc[val_size:][["en", "hi"]]
 
-train_path = BASE_DIR / "data" / "train_data.csv"
-val_path = BASE_DIR / "data" / "val_data.csv"
-mixed_path = BASE_DIR / "data" / "daily_hindi_mixed.csv"
+train_path = REPO_ROOT / "data" / "train_data.csv"
+val_path = REPO_ROOT / "data" / "val_data.csv"
+mixed_path = REPO_ROOT / "data" / "daily_hindi_mixed.csv"
 
 train_df.to_csv(train_path, index=False)
 val_df.to_csv(val_path, index=False)
@@ -97,6 +102,6 @@ print(f"Val split saved to {val_path} ({len(val_df)} rows)")
 print(f"Mixed dataset saved to {mixed_path} ({len(combined)} rows)")
 
 # Sync to root
-train_df.to_csv(ROOT_DIR / "train_data.csv", index=False)
-val_df.to_csv(ROOT_DIR / "val_data.csv", index=False)
+train_df.to_csv(REPO_ROOT.parent / "train_data.csv", index=False)
+val_df.to_csv(REPO_ROOT.parent / "val_data.csv", index=False)
 print("Synced to root train_data.csv and val_data.csv")
