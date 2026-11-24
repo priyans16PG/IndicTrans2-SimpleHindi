@@ -16,8 +16,14 @@ Thumbs.db
 merged_model/
 onnx_model/
 pack/
+model_v012_backup/
 *.zip
 *.onnx
+
+# Diagnostics and scratch
+audit_scripts_and_data.py
+diagnose_base_inference.py
+isolation_test.py
 
 # ONNX pipeline & packaging files
 export_onnx.py

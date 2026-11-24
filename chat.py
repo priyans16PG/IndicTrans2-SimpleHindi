@@ -25,7 +25,7 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
 base_model = AutoModelForSeq2SeqLM.from_pretrained(
     MODEL_NAME,
     trust_remote_code=True,
-    dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
 )
 model = PeftModel.from_pretrained(base_model, ADAPTER_PATH).to(DEVICE)
 model.eval()
@@ -37,8 +37,9 @@ SUPPRESS_TOKENS = [tid for tid, token in tokenizer.tgt_decoder.items() if arabic
 ip = IndicProcessor(inference=True)
 
 def clean_output(text: str) -> str:
-    text = re.sub(r'^(?:_[A-Za-z]+|[a-z]{3}_[A-Za-z]+)\s*', '', text)
-    text = re.sub(r'^[\s"\'“”]+', '', text)
+    text = re.sub(r'^(?:[\d\-/.]*(?:_?[A-Za-z]+|\w+_Deva)[\d\-/.]*\s*|[\d\-/.]+\s*)+', '', text)
+    text = re.sub(r'^[\d\-/.]+(?=[\u0900-\u097F])', '', text)
+    text = re.sub(r'^[^\w\s\u0900-\u097F]+', '', text)
     text = re.sub(r'[\s"\'“”]+$', '', text)
     text = re.sub(r'["“”]{2,}', '', text)
     return text.strip()

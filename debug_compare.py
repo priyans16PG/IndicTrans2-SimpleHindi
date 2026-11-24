@@ -29,8 +29,9 @@ test_sentences = [
 ]
 
 def clean_output(text: str) -> str:
-    text = re.sub(r'^(?:_[A-Za-z]+|[a-z]{3}_[A-Za-z]+)\s*', '', text)
-    text = re.sub(r'^[\s"\'“”]+', '', text)
+    text = re.sub(r'^(?:[\d\-/.]*(?:_?[A-Za-z]+|\w+_Deva)[\d\-/.]*\s*|[\d\-/.]+\s*)+', '', text)
+    text = re.sub(r'^[\d\-/.]+(?=[\u0900-\u097F])', '', text)
+    text = re.sub(r'^[^\w\s\u0900-\u097F]+', '', text)
     text = re.sub(r'[\s"\'“”]+$', '', text)
     text = re.sub(r'["“”]{2,}', '', text)
     return text.strip()

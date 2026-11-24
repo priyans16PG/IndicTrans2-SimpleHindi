@@ -10,35 +10,40 @@ from transformers import (
     Seq2SeqTrainer,
     DataCollatorForSeq2Seq,
 )
-from peft import LoraConfig, get_peft_model, TaskType
+from peft import LoraConfig, get_peft_model, PeftModel, TaskType
 from IndicTransToolkit.processor import IndicProcessor
 
+BASE_DIR = Path(__file__).resolve().parent
 MODEL_NAME = "ai4bharat/indictrans2-en-indic-dist-200M"
 SRC_LANG = "eng_Latn"
 TGT_LANG = "hin_Deva"
 
 # 1. Load tokenizer, model, and IndicProcessor
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
-model = AutoModelForSeq2SeqLM.from_pretrained(
+base_model = AutoModelForSeq2SeqLM.from_pretrained(
     MODEL_NAME,
     trust_remote_code=True,
-    dtype=torch.float16,
+    torch_dtype=torch.float16,
 )
 ip = IndicProcessor(inference=False)
 
-# 2. Configure LoRA (targets attention projections)
-lora_config = LoraConfig(
-    task_type=TaskType.SEQ_2_SEQ_LM,
-    r=8,
-    lora_alpha=16,
-    lora_dropout=0.05,
-    target_modules=["q_proj", "k_proj", "v_proj", "out_proj"],
-)
-model = get_peft_model(model, lora_config)
+# 2. Configure / Load LoRA adapter (train on top of healthy v0.1.2 adapter)
+adapter_dir = str(BASE_DIR / "model")
+if (BASE_DIR / "model" / "adapter_model.safetensors").exists():
+    print(f"Loading existing healthy adapter from {adapter_dir} for continuation fine-tuning (is_trainable=True)...")
+    model = PeftModel.from_pretrained(base_model, adapter_dir, is_trainable=True)
+else:
+    lora_config = LoraConfig(
+        task_type=TaskType.SEQ_2_SEQ_LM,
+        r=8,
+        lora_alpha=16,
+        lora_dropout=0.05,
+        target_modules=["q_proj", "k_proj", "v_proj", "out_proj"],
+    )
+    model = get_peft_model(base_model, lora_config)
 model.print_trainable_parameters()
 
 # 3. Load Dataset
-BASE_DIR = Path(__file__).resolve().parent
 train_path = str(BASE_DIR / "data" / "train_data.csv")
 val_path = str(BASE_DIR / "data" / "val_data.csv")
 dataset = load_dataset("csv", data_files={"train": train_path, "test": val_path})
@@ -60,7 +65,7 @@ training_args = Seq2SeqTrainingArguments(
     per_device_train_batch_size=4,
     per_device_eval_batch_size=4,
     gradient_accumulation_steps=8,
-    learning_rate=1e-4,
+    learning_rate=5e-5,
     lr_scheduler_type="cosine",
     warmup_ratio=0.05,
     weight_decay=0.01,
@@ -72,7 +77,7 @@ training_args = Seq2SeqTrainingArguments(
     metric_for_best_model="eval_loss",
     greater_is_better=False,
     save_total_limit=2,
-    logging_steps=25,
+    logging_steps=15,
     predict_with_generate=False,
 )
 
