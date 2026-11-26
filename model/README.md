@@ -9,9 +9,13 @@ tags:
 - indictrans2
 - lora
 - peft
-- translation
+- machine-translation
 - english-to-hindi
 - simple-hindi
+- conversational-hindi
+- hinglish
+- devanagari
+- nlp
 ---
 
 # IndicTrans2-SimpleHindi (`v1.0.1` LoRA Adapter)
@@ -50,12 +54,12 @@ base_model = AutoModelForSeq2SeqLM.from_pretrained(
     trust_remote_code=True,
     torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
 )
-model = PeftModel.from_pretrained(base_model, ADAPTER_PATH).to(DEVICE)
+model = PeftModel.from_pretrained(base_model, ADAPTER_PATH).merge_and_unload().to(DEVICE)
 model.eval()
 
 ip = IndicProcessor(inference=True)
 batch = ip.preprocess_batch(
-    ["No worries at all, we can easily reschedule for tomorrow evening."],
+    ["Just take a screenshot of the error message and share it in the group."],
     src_lang="eng_Latn",
     tgt_lang="hin_Deva",
 )
@@ -66,29 +70,28 @@ with torch.no_grad():
         **inputs,
         max_length=256,
         num_beams=4,
-        use_cache=False,
+        use_cache=True,
         no_repeat_ngram_size=3,
         repetition_penalty=1.2,
     )
 
 decoded = tokenizer.batch_decode(generated, skip_special_tokens=True)
 print(ip.postprocess_batch(decoded, lang="hin_Deva")[0])
-# कोई चिंता नहीं, हम आसानी से कल शाम के लिए रीशेड्यूल कर सकते हैं।
+# बस एरर मैसेज का स्क्रीन शॉट लें और ग्रुप में शेयर करें।
 ```
 
 For automatic multi-sentence paragraph splitting and non-Devanagari token suppression, use `translate_batch()` from `inference.py` or the interactive CLI in `chat.py`.
 
-## Training Summary (`v1.0.0`)
+## Training Summary (`v1.0.1`)
 
-- **Optimization:** `learning_rate=5e-5`, cosine scheduler (`warmup_ratio=0.05`), effective batch size `32` (`4 x 8`), `fp16`, `max_length=256`, `label_pad_token_id=-100`
-- **Data Mix:** Curated conversational/tech pairs, cleaned narrative prose, and stitched 2-sentence pairs for long-span stability
-- **Final Validation Loss:** `1.1544` (down from `1.3127` in `v0.1.3`, `1.927` in `v0.1.2`, and `2.207` in `v0.1.1`)
+- **Foundation (`v1.0.0`):** `lr=5e-5`, cosine scheduler, `max_length=256`, `label_pad_token_id=-100` on conversational/tech pairs, narrative prose, and stitched 2-sentence pairs (`eval_loss: 1.1544`).
+- **Patch (`v1.0.1`):** Gentle continuation (`lr=3e-5`, 2 epochs) on 200 modern tech/slang pairs + 250 `v1.0.0` replay pairs (`eval_loss: 1.1733`) to restore tech/workplace loanwords without losing narrative flow.
 
 ## Limitations
 
 - Abstract self-help/finance terms may occasionally retain formal base-model vocabulary.
 - A few figurative English idioms can still translate literally.
-- For 3+ sentence paragraphs, use sentence splitting (built into `inference.py` and `chat.py`).
+- For multi-sentence paragraphs, use sentence splitting (built into `inference.py` and `chat.py`).
 
 ## Attribution
 
