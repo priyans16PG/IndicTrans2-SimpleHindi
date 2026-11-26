@@ -1,18 +1,20 @@
 # IndicTrans2-SimpleHindi
 
-> **Version:** `v0.1.3 (beta)`
+> **Version:** `v0.1.4 (beta)`
 >
 > **Base Model:** [`ai4bharat/indictrans2-en-indic-dist-200M`](https://huggingface.co/ai4bharat/indictrans2-en-indic-dist-200M)
 >
-> **Status:** Beta — Verified on 30-sentence standard suite & 27-item multi-tier stress test
+> **Status:** Beta — Verified on 30-sentence standard suite, 27-item stress test, and 30-item v3 benchmark (including multi-sentence paragraphs)
 
 **IndicTrans2-SimpleHindi** is a lightweight LoRA adapter (\~7 MB) for IndicTrans2 200M fine-tuned to produce **natural, everyday spoken Hindi** instead of stiff, textbook translations.
 
-Standard English-to-Hindi models often output archaic or overly formal vocabulary (e.g., *यातायात*, *बैठक*, *समय सीमा*, *साक्षात्कार*, *मात्रात्मक*). **IndicTrans2-SimpleHindi** shifts the output toward modern conversational Hindi with clean Devanagari loanwords (e.g., *ट्रैफिक*, *मीटिंग*, *डेडलाइन*, *इंटरव्यू*, *क्वांटाइज्ड*, *वॉट्सऐप*) while preserving multi-clause logic and nuance.
+Standard English-to-Hindi models often output archaic or overly formal vocabulary (e.g., *यातायात*, *बैठक*, *समय सीमा*, *साक्षात्कार*, *मात्रात्मक*). **IndicTrans2-SimpleHindi** shifts the output toward modern conversational Hindi with clean Devanagari loanwords (e.g., *ट्रैफिक*, *मीटिंग*, *डेडलाइन*, *इंटरव्यू*, *क्वांटाइज्ड*, *वॉट्सऐप*) while preserving multi-clause logic, storytelling flow, and paragraph completeness.
 
 ## Key Features
 
-* **Natural Spoken Hindi:** Replaces formal textbook phrasing with everyday conversational Hindi.
+* **Natural Spoken Hindi:** Replaces formal textbook phrasing with everyday conversational Hindi and smooth narrative prose.
+
+* **Paragraph-Safe Sentence Splitting:** Automatically splits multi-sentence paragraphs in `inference.py` and `chat.py` (preserving abbreviations like `Mr.`, `Mrs.`, `Dr.`, `e.g.`, `...`, and newline breaks) so long paragraphs never drop middle sentences.
 
 * **Modern Tech & Indian Context:** Handles loanwords naturally in Devanagari (*अपडेट इंस्टॉल*, *एरर मैसेज*, *डिलीवरी बॉय*, *मेन गेट*, *फ्लाइट मिस*, *क्वांटाइज्ड मॉडल*).
 
@@ -132,25 +134,11 @@ python train.py
 
 ```
 IndicTrans2-SimpleHindi/
-├── model/                          # Fine-tuned LoRA adapter weights (v0.1.3 beta)
+├── model/                          # Fine-tuned LoRA adapter weights (v0.1.4 beta)
 │   ├── adapter_config.json
 │   └── adapter_model.safetensors
-├── data/                           # Cleaned training and validation CSVs
-│   ├── train_data.csv
-│   ├── val_data.csv
-│   ├── daily_hindi_mixed.csv
-│   └── daily_hindi_conversational.csv
-├── scripts/                        # Benchmarks, data processing & utility scripts
-│   ├── run_30_benchmark.py         # 30-sentence benchmark runner
-│   ├── run_benchmark_v2.py         # 27-item stress-test runner
-│   ├── debug_compare.py            # Base vs. LoRA diagnostic comparison script
-│   ├── build_v013_data.py          # Dataset curation & filtering script
-│   ├── clean_dataset.py            # Dataset sanitization & deduplication
-│   ├── audit_dataset.py            # Dataset anomaly and script-leak audit
-│   ├── simple_hindi_test_set.txt   # Standard 30-sentence benchmark test set
-│   └── simple_hindi_benchmark_v2.txt # 27-item stress-test dataset
-├── chat.py                         # Interactive terminal translator
-├── inference.py                    # Batch inference helper
+├── chat.py                         # Interactive terminal translator (with sentence splitting)
+├── inference.py                    # Batch & paragraph inference helper
 ├── train.py                        # LoRA fine-tuning script
 ├── requirements.txt                # Pinned dependencies (transformers==4.46.3)
 ├── .gitignore
@@ -159,16 +147,22 @@ IndicTrans2-SimpleHindi/
 
 ## Known Limitations & Roadmap
 
-### Current Limitations (`v0.1.3 beta`)
+### Current Limitations (`v0.1.4 beta`)
 
 * **Non-Fiction / Mindset Vocabulary:** Abstract self-help and finance terms still occasionally retain formal base-model vocabulary (e.g., *प्रतिभाशाली*, *व्यवस्थाएँ*, *तत्काल परिणाम*, *चक्रवृद्धि*).
-
-* **Raw Multi-Sentence Input:** Passing unsplit 3+ sentence paragraphs can occasionally drop a middle clause; use sentence-splitting for book/document translation.
 
 * **English Idioms:** A few figurative idioms (*"too much on his plate"*, *"acting up"*) can still translate literally.
 
 
 ## Release Notes
+
+### `v0.1.4` (beta)
+
+* **Paragraph Sentence-Splitting Pipeline:** Added `split_sentences()` to `inference.py` and `chat.py` (preserving abbreviations like `Mr.`, `Mrs.`, `Dr.`, `St.`, `e.g.`, `i.e.`, `...`, and `\n` breaks), eliminating dropped middle sentences in multi-sentence paragraphs.
+
+* **Narrative & Storytelling Continuation:** Fine-tuned gently on top of `v0.1.3` (`lr=5e-5`, 2 epochs, `max_length=256`) using cleaned *Wise and Otherwise* parallel pairs, 10% stitched 2-sentence pairs, and a 450-row conversational/tech replay buffer — reducing validation loss from `1.312` to **`1.154`**.
+
+* **Clean Core Repository:** Untracked internal datasets, dev scripts, and benchmark files via `.gitignore` so the repository tracks only core user-facing files.
 
 ### `v0.1.3` (beta)
 

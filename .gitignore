@@ -8,6 +8,7 @@ env/
 venv/
 *.checkpoint.*
 model_checkpoints/
+model_v014_checkpoints/
 indictrans2-daily-hindi-lora/
 .DS_Store
 Thumbs.db
@@ -16,9 +17,15 @@ Thumbs.db
 merged_model/
 onnx_model/
 pack/
-model_v012_backup/
+model_v*/
 *.zip
 *.onnx
+
+# Non-essential datasets, dev scripts, and benchmarks
+data/
+scripts/
+*benchmark*.txt
+*wise_and_otherwise*.csv
 
 # Diagnostics and scratch
 scripts/audit_scripts_and_data.py

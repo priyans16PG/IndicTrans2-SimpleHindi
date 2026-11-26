@@ -1,10 +1,6 @@
 ---
 base_model: ai4bharat/indictrans2-en-indic-dist-200M
 library_name: peft
-tags:
-- base_model:adapter:ai4bharat/indictrans2-en-indic-dist-200M
-- lora
-- transformers
 ---
 
 # Model Card for Model ID
@@ -204,4 +200,3 @@ Carbon emissions can be estimated using the [Machine Learning Impact calculator]
 ### Framework versions
 
 - PEFT 0.13.2
-- PEFT 0.22.0
