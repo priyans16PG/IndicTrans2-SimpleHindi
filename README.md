@@ -28,15 +28,16 @@ Standard English-to-Hindi models often output archaic or overly formal vocabular
 
 * **CPU & GPU Ready:** Automatically uses CUDA (FP16) when available and falls back cleanly to CPU.
 
-## Side-by-Side Comparison (Base vs. v1.0.0)
+## Side-by-Side Comparison (Base vs. Previous `v1.0.0` vs. Current `v1.0.1`)
 
-| Category | English Input | Base IndicTrans2 (Formal) | IndicTrans2-SimpleHindi (`v1.0.0`) |
-| ----- | ----- | ----- | ----- |
-| **Daily Chat** | *No worries at all, we can easily reschedule for tomorrow evening.* | चिंता की कोई बात नहीं, हम आसानी से कल शाम के लिए पुनर्निर्धारित कर सकते हैं। | कोई चिंता नहीं, हम आसानी से कल शाम के लिए रीशेड्यूल कर सकते हैं। |
-| **Tech / PC** | *Always keep a backup of your project folder on Google Drive before formatting your PC.* | अपने पीसी को प्रारूपित करने से पहले हमेशा गूगल ड्राइव पर अपने परियोजना फ़ोल्डर का एक बैकअप रखें। | अपने पीसी को फॉर्मेट करने से पहले हमेशा गूगल ड्राइव पर अपने प्रोजेक्ट फ़ोल्डर का बैकअप रखें। |
-| **Mindset** | *If you wait until you feel completely ready, you will probably keep postponing your dream forever.* | यदि आप तब तक प्रतीक्षा करते हैं जब तक कि आप पूरी तरह से तैयार महसूस नहीं करते हैं, तो आप शायद अपने सपने को हमेशा के लिए स्थगित करते रहेंगे। | अगर आप पूरी तरह से तैयार महसूस करने तक इंतजार करते हैं, तो आप शायद अपना सपना हमेशा के लिए टालते रहेंगे। |
-| **Indian Context** | *We ordered biryani from Zomato, and the delivery guy got lost near the main gate.* | हमने जोमैटो से बिरयानी मंगाई, और डिलीवरी करने वाला मुख्य द्वार के पास खो गया। | हमने जोमैटो से बिरयानी मंगाई, और डिलीवरी बॉय मेन गेट के पास खो गया। |
-| **Tech / AI** | *Now, with quantized weights and ONNX runtimes, you can translate an entire textbook chapter on a train with zero internet connection.* | अब, मात्रात्मक भार और ओएनएनएक्स रनटाइम के साथ, आप शून्य इंटरनेट कनेक्शन के साथ एक ट्रेन में एक पूरे पाठ्यपुस्तक अध्याय का अनुवाद कर सकते हैं। | अब, क्वांटाइज्ड वेट और ओ. एन. एक्स. रनटाइम के साथ, आप शून्य इंटरनेट कनेक्शन वाली ट्रेन में एक पूरे पाठ्यपुस्तक अध्याय का अनुवाद कर सकते हैं। |
+| Category | English Input | Base IndicTrans2 (Formal) | Previous (`v1.0.0`) | Current (`v1.0.1`) |
+| ----- | ----- | ----- | ----- | ----- |
+| **Daily Chat** | *No worries at all, we can easily reschedule for tomorrow evening.* | चिंता की कोई बात नहीं, हम आसानी से कल शाम के लिए पुनर्निर्धारित कर सकते हैं। | कोई चिंता नहीं, हम आसानी से कल शाम के लिए रीशेड्यूल कर सकते हैं। | बिल्कुल भी चिंता मत करो, हम आसानी से कल शाम के लिए रीशेड्यूल कर सकते हैं। |
+| **Tech / PC** | *Always keep a backup of your project folder on Google Drive before formatting your PC.* | अपने पीसी को प्रारूपित करने से पहले हमेशा गूगल ड्राइव पर अपने परियोजना फ़ोल्डर का एक बैकअप रखें। | अपने पीसी को फॉर्मेट करने से पहले हमेशा गूगल ड्राइव पर अपने प्रोजेक्ट फ़ोल्डर का बैकअप रखें। | अपने पीसी को फॉर्मेट करने से पहले हमेशा गूगल ड्राइव पर अपने प्रोजेक्ट फ़ोल्डर का बैकअप रखें। |
+| **Tech / Chat** | *Just take a screenshot of the error message and share it in the group.* | बस त्रुटि संदेश का एक स्क्रीनशॉट लें और इसे समूह में साझा करें। | बस त्रुटि संदेश का एक स्क्रीन शॉट लें और उसे समूह में साझा करें। | बस एरर मैसेज का स्क्रीन शॉट लें और ग्रुप में शेयर करें। |
+| **Mindset** | *If you wait until you feel completely ready, you will probably keep postponing your dream forever.* | यदि आप तब तक प्रतीक्षा करते हैं जब तक कि आप पूरी तरह से तैयार महसूस नहीं करते हैं, तो आप शायद अपने सपने को हमेशा के लिए स्थगित करते रहेंगे। | अगर आप पूरी तरह से तैयार महसूस करने तक इंतजार करते हैं, तो आप शायद अपना सपना हमेशा के लिए टालते रहेंगे। | अगर आप पूरी तरह से तैयार महसूस करने तक इंतजार करते हैं, तो आप शायद अपने सपने को हमेशा के लिए टालते रहेंगे। |
+| **Indian Context** | *We ordered biryani from Zomato, and the delivery guy got lost near the main gate.* | हमने जोमैटो से बिरयानी मंगाई, और डिलीवरी करने वाला मुख्य द्वार के पास खो गया। | हमने जोमैटो से बिरयानी मंगाई, और डिलीवरी बॉय मेन गेट के पास खो गया। | हमने जोमैटो से बिरयानी मंगवाई, और डिलीवरी बॉय मेन गेट के पास खो गया। |
+| **Tech / AI** | *Now, with quantized weights and ONNX runtimes, you can translate an entire textbook chapter on a train with zero internet connection.* | अब, मात्रात्मक भार और ओएनएनएक्स रनटाइम के साथ, आप शून्य इंटरनेट कनेक्शन के साथ एक ट्रेन में एक पूरे पाठ्यपुस्तक अध्याय का अनुवाद कर सकते हैं। | अब, क्वांटाइज्ड वेट और ओ. एन. एक्स. रनटाइम के साथ, आप शून्य इंटरनेट कनेक्शन वाली ट्रेन में एक पूरे पाठ्यपुस्तक अध्याय का अनुवाद कर सकते हैं। | अब, क्वांटाइज्ड वेट और ओएनएनएक्स रनटाइम के साथ, आप जीरो इंटरनेट कनेक्शन वाली ट्रेन में एक पूरे पाठ्यपुस्तक चैप्टर का अनुवाद कर सकते हैं। |
 
 ## Quickstart
 
