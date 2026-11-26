@@ -9,6 +9,7 @@ venv/
 *.checkpoint.*
 model_checkpoints/
 model_v014_checkpoints/
+model_v101_checkpoints/
 indictrans2-daily-hindi-lora/
 .DS_Store
 Thumbs.db

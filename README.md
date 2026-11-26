@@ -1,6 +1,6 @@
 # IndicTrans2-SimpleHindi
 
-> **Version:** `v1.0.0 (Stable)`
+> **Version:** `v1.0.1 (Stable)`
 >
 > **Base Model:** [`ai4bharat/indictrans2-en-indic-dist-200M`](https://huggingface.co/ai4bharat/indictrans2-en-indic-dist-200M)
 >
@@ -63,7 +63,7 @@ python chat.py
 
 ```
 ============================================================
- IndicTrans2-SimpleHindi v1.0.0
+ IndicTrans2-SimpleHindi v1.0.1
  Running on: CUDA
 ============================================================
 
@@ -133,7 +133,7 @@ python train.py
 
 ```
 IndicTrans2-SimpleHindi/
-├── model/                          # Fine-tuned LoRA adapter weights (v1.0.0 Stable)
+├── model/                          # Fine-tuned LoRA adapter weights (v1.0.1 Stable)
 │   ├── adapter_config.json
 │   └── adapter_model.safetensors
 ├── chat.py                         # Interactive terminal translator (with sentence splitting)
@@ -146,14 +146,18 @@ IndicTrans2-SimpleHindi/
 
 ## Known Limitations & Roadmap
 
-### Current Limitations (`v1.0.0`)
+### Current Limitations (`v1.0.1`)
 
-* **Non-Fiction / Mindset Vocabulary:** Abstract self-help and finance terms still occasionally retain formal base-model vocabulary (e.g., *प्रतिभाशाली*, *व्यवस्थाएँ*, *तत्काल परिणाम*, *चक्रवृद्धि*).
+* **Non-Fiction / Mindset Vocabulary:** Abstract self-help and finance terms still occasionally retain formal base-model vocabulary (e.g., *प्रतिभाशाली*, *व्यवस्थाएँ*, *चक्रवृद्धि*).
 
 * **English Idioms:** A few figurative idioms (*"too much on his plate"*, *"acting up"*) can still translate literally.
 
 
 ## Release Notes
+
+### `v1.0.1` (Stable)
+
+* **Modern Tech & Workplace Loanword Refresh:** Gentle continuation patch (`lr=3e-5`, 2 epochs) on 200 modern tech/slang pairs + 250 `v1.0.0` replay pairs (`eval_loss=1.1733`). Restored everyday tech terms (*एरर मैसेज*, *ग्रुप में शेयर*, *वर्क कल्चर*, *क्वांटाइज्ड मॉडल*, *प्राइवेट डेटा*, *कंज्यूमर जीपीयू*, *वर्क सेव*) while preserving `v1.0.0`'s paragraph flow and pronoun consistency.
 
 ### `v1.0.0` (Stable)
 

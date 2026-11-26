@@ -14,13 +14,13 @@ tags:
 - simple-hindi
 ---
 
-# IndicTrans2-SimpleHindi (`v1.0.0` LoRA Adapter)
+# IndicTrans2-SimpleHindi (`v1.0.1` LoRA Adapter)
 
 A lightweight (~7 MB) LoRA adapter for [`ai4bharat/indictrans2-en-indic-dist-200M`](https://huggingface.co/ai4bharat/indictrans2-en-indic-dist-200M) fine-tuned to translate English into **natural, everyday spoken Hindi** instead of formal textbook translations.
 
 ## Model Details
 
-- **Version:** `v1.0.0` (Stable)
+- **Version:** `v1.0.1` (Stable)
 - **Base Model:** `ai4bharat/indictrans2-en-indic-dist-200M`
 - **Adapter Type:** PEFT LoRA (`r=8`, `lora_alpha=16`, `lora_dropout=0.05`)
 - **Target Modules:** `q_proj`, `k_proj`, `v_proj`, `out_proj`

@@ -41,7 +41,7 @@ def resolve_adapter_path() -> str:
 ADAPTER_PATH = resolve_adapter_path()
 
 print("=" * 60)
-print(" IndicTrans2-SimpleHindi v1.0.0")
+print(" IndicTrans2-SimpleHindi v1.0.1")
 print(f" Running on: {DEVICE.upper()}")
 print("=" * 60)
 
