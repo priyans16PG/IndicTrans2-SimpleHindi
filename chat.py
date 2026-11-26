@@ -17,7 +17,7 @@ ADAPTER_PATH = os.path.join(BASE_DIR, "model")
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 print("=" * 60)
-print(" IndicTrans2-SimpleHindi v0.1.4 (beta)")
+print(" IndicTrans2-SimpleHindi v1.0.0")
 print(f" Running on: {DEVICE.upper()}")
 print("=" * 60)
 

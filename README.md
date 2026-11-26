@@ -1,10 +1,10 @@
 # IndicTrans2-SimpleHindi
 
-> **Version:** `v0.1.4 (beta)`
+> **Version:** `v1.0.0 (Stable)`
 >
 > **Base Model:** [`ai4bharat/indictrans2-en-indic-dist-200M`](https://huggingface.co/ai4bharat/indictrans2-en-indic-dist-200M)
 >
-> **Status:** Beta — Verified on 30-sentence standard suite, 27-item stress test, and 30-item v3 benchmark (including multi-sentence paragraphs)
+> **Status:** Stable — Verified on 30-sentence standard suite, 27-item stress test, and 30-item v3 benchmark (including multi-sentence paragraphs)
 
 **IndicTrans2-SimpleHindi** is a lightweight LoRA adapter (\~7 MB) for IndicTrans2 200M fine-tuned to produce **natural, everyday spoken Hindi** instead of stiff, textbook translations.
 
@@ -28,16 +28,15 @@ Standard English-to-Hindi models often output archaic or overly formal vocabular
 
 * **CPU & GPU Ready:** Automatically uses CUDA (FP16) when available and falls back cleanly to CPU.
 
-## Side-by-Side Comparison (Base vs. v0.1.3 Beta)
+## Side-by-Side Comparison (Base vs. v1.0.0)
 
-| Category | English Input | Base IndicTrans2 (Formal) | IndicTrans2-SimpleHindi (`v0.1.3`) | 
-| ----- | ----- | ----- | ----- | 
-| **Daily Chat** | *I am stuck in traffic right now, so I will be ten minutes late for the meeting.* | मैं अभी यातायात में फंसा हुआ हूँ, इसलिए मैं बैठक के लिए दस मिनट देर से पहुंचूंगा। | मैं अभी ट्रैफिक में फंसा हुआ हूँ, इसलिए मीटिंग के लिए दस मिनट लेट हो जाऊँगा। | 
-| **Idiom Fix** | *Can you call me back once you reach home?* | घर पहुँचने के बाद क्या आप मुझे वापस बुला सकते हैं? | क्या तुम घर पहुँचने के बाद मुझे वापस कॉल कर सकते हो? | 
-| **Tech / Office** | *Save your work before installing the update, otherwise the app might crash.* | अद्यतन स्थापित करने से पहले अपने काम को सुरक्षित रखें, अन्यथा ऐप क्रैश हो सकता है। | अपडेट इंस्टॉल करने से पहले अपना वर्क सेव कर लें, नहीं तो ऐप क्रैश हो सकता है। | 
-| **Indian Context** | *We ordered biryani from Zomato, and the delivery guy got lost near the main gate.* | हमने जोमैटो से बिरयानी मंगाई, और डिलीवरी करने वाला मुख्य द्वार के पास खो गया। | हमने जोमैटो से बिरयानी मंगाई, और डिलीवरी बॉय मेन गेट के पास खो गया। | 
-| **Workplace** | *Don't take tension about the interview; just stay calm and answer honestly.* | साक्षात्कार के बारे में तनाव न लें; बस शांत रहें और ईमानदारी से जवाब दें। | इंटरव्यू को लेकर टेंशन मत लीजिए; बस शांत रहें और ईमानदारी से जवाब दें। | 
-| **Tech / AI** | *Today, smaller quantized models can run completely offline on a regular consumer GPU.* | आज, छोटे मात्रात्मक मॉडल... नियमित उपभोक्ता जी. पी. यू. पर पूरी तरह से ऑफ़लाइन चल सकते हैं। | आज, छोटे क्वांटाइज्ड मॉडल... नियमित उपभोक्ता जीपीयू पर पूरी तरह से ऑफ़लाइन चल सकते हैं। | 
+| Category | English Input | Base IndicTrans2 (Formal) | IndicTrans2-SimpleHindi (`v1.0.0`) |
+| ----- | ----- | ----- | ----- |
+| **Daily Chat** | *No worries at all, we can easily reschedule for tomorrow evening.* | चिंता की कोई बात नहीं, हम आसानी से कल शाम के लिए पुनर्निर्धारित कर सकते हैं। | कोई चिंता नहीं, हम आसानी से कल शाम के लिए रीशेड्यूल कर सकते हैं। |
+| **Tech / PC** | *Always keep a backup of your project folder on Google Drive before formatting your PC.* | अपने पीसी को प्रारूपित करने से पहले हमेशा गूगल ड्राइव पर अपने परियोजना फ़ोल्डर का एक बैकअप रखें। | अपने पीसी को फॉर्मेट करने से पहले हमेशा गूगल ड्राइव पर अपने प्रोजेक्ट फ़ोल्डर का बैकअप रखें। |
+| **Mindset** | *If you wait until you feel completely ready, you will probably keep postponing your dream forever.* | यदि आप तब तक प्रतीक्षा करते हैं जब तक कि आप पूरी तरह से तैयार महसूस नहीं करते हैं, तो आप शायद अपने सपने को हमेशा के लिए स्थगित करते रहेंगे। | अगर आप पूरी तरह से तैयार महसूस करने तक इंतजार करते हैं, तो आप शायद अपना सपना हमेशा के लिए टालते रहेंगे। |
+| **Indian Context** | *We ordered biryani from Zomato, and the delivery guy got lost near the main gate.* | हमने जोमैटो से बिरयानी मंगाई, और डिलीवरी करने वाला मुख्य द्वार के पास खो गया। | हमने जोमैटो से बिरयानी मंगाई, और डिलीवरी बॉय मेन गेट के पास खो गया। |
+| **Tech / AI** | *Now, with quantized weights and ONNX runtimes, you can translate an entire textbook chapter on a train with zero internet connection.* | अब, मात्रात्मक भार और ओएनएनएक्स रनटाइम के साथ, आप शून्य इंटरनेट कनेक्शन के साथ एक ट्रेन में एक पूरे पाठ्यपुस्तक अध्याय का अनुवाद कर सकते हैं। | अब, क्वांटाइज्ड वेट और ओ. एन. एक्स. रनटाइम के साथ, आप शून्य इंटरनेट कनेक्शन वाली ट्रेन में एक पूरे पाठ्यपुस्तक अध्याय का अनुवाद कर सकते हैं। |
 
 ## Quickstart
 
@@ -64,7 +63,7 @@ python chat.py
 
 ```
 ============================================================
- IndicTrans2-SimpleHindi v0.1.3 (beta)
+ IndicTrans2-SimpleHindi v1.0.0
  Running on: CUDA
 ============================================================
 
@@ -134,7 +133,7 @@ python train.py
 
 ```
 IndicTrans2-SimpleHindi/
-├── model/                          # Fine-tuned LoRA adapter weights (v0.1.4 beta)
+├── model/                          # Fine-tuned LoRA adapter weights (v1.0.0 Stable)
 │   ├── adapter_config.json
 │   └── adapter_model.safetensors
 ├── chat.py                         # Interactive terminal translator (with sentence splitting)
@@ -147,7 +146,7 @@ IndicTrans2-SimpleHindi/
 
 ## Known Limitations & Roadmap
 
-### Current Limitations (`v0.1.4 beta`)
+### Current Limitations (`v1.0.0`)
 
 * **Non-Fiction / Mindset Vocabulary:** Abstract self-help and finance terms still occasionally retain formal base-model vocabulary (e.g., *प्रतिभाशाली*, *व्यवस्थाएँ*, *तत्काल परिणाम*, *चक्रवृद्धि*).
 
@@ -155,6 +154,16 @@ IndicTrans2-SimpleHindi/
 
 
 ## Release Notes
+
+### `v1.0.0` (Stable)
+
+* **First Stable Release:** Graduated from beta after passing 30-sentence standard, 27-item stress-test, and 30-item v3 benchmarks.
+
+* **Enhanced Storytelling & Non-Fiction Fluency:** Fine-tuned on modern conversational prose and narrative pairs while retaining everyday tech and workplace loanwords.
+
+* **Built-In Paragraph Sentence Splitting:** Automatic `split_sentences()` pipeline in `inference.py` and `chat.py` (preserving abbreviations and `\n` breaks) for reliable multi-sentence paragraph translation.
+
+* **Lean Repository Structure:** Clean, self-contained repository tracking only core inference, adapter weights, and training scripts.
 
 ### `v0.1.4` (beta)
 
